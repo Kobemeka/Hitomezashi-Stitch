@@ -64,5 +64,3 @@ def hitomezashi(x,y,colorx="k",colory="k",save=True,file_name="hitomezashi-stitc
     if save:
         plt.savefig(file_name,dpi=dpi)
     plt.show()
-
-hitomezashi(50,50)
