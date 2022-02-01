@@ -98,8 +98,3 @@ def sentence_hitomezashi(sentence1,sentence2,rule,colorx="k",colory="k",save=Tru
     if save:
         plt.savefig(file_name,dpi=dpi)
     plt.show()
-
-# random_hitomezashi(10,10)
-sentence_hitomezashi("wisharedoma hos geldiniz","kubilay aytemiz","vowel")
-
-# print(create_lines(convert_vowel("e"),5))
