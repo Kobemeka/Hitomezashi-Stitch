@@ -33,8 +33,11 @@ def random_stack_lines(n,m):
 
     return [create_lines(i,n) for i in random_numbers(m+1)]
 
-def draw_hline(lines,y,color,ax,write,char):
+def draw_hline(lines,y,color,ax,write,char,inverse):
     # draw a horizontal line
+    if inverse:
+        y = -y
+
     [ax.plot([i, i + 1],[y,y],color=color) for i,v in enumerate(lines) if v == 1]
 
     if write == "default":
@@ -42,23 +45,28 @@ def draw_hline(lines,y,color,ax,write,char):
     elif write == "chars":
         ax.text(-1,y,f"{char}",ha='center', va='center')
 
-def draw_hlines(random_stack_lines,color,ax,write="default",chars=""):
+def draw_hlines(random_stack_lines,color,ax,write="default",chars="",inverse=False):
     # draw horizontal lines
-    [draw_hline(line,y,color,ax,write,chars[y]) for y,line in enumerate(random_stack_lines)]
+    [draw_hline(line,y,color,ax,write,chars[y],inverse) for y,line in enumerate(random_stack_lines)]
 
-def draw_vline(lines,x,color,ax,write,char):
+def draw_vline(lines,x,color,ax,write,char,inverse):
     # draw a vertical line
-    [ax.plot([x,x],[i, i + 1],color=color) for i,v in enumerate(lines) if v == 1]
+    if inverse:
+        [ax.plot([x,x],[-i, -i - 1],color=color) for i,v in enumerate(lines) if v == 1]
+    else:
+        [ax.plot([x,x],[i, i + 1],color=color) for i,v in enumerate(lines) if v == 1]
+
+    text_y = 1 if inverse else -1
 
     if write == "default":
-        ax.text(x,-1,f"{lines[0]}",ha='center', va='center')
+        ax.text(x,text_y,f"{lines[0]}",ha='center', va='center')
     elif write == "chars":
-        ax.text(x,-1,f"{char}",ha='center', va='center')
+        ax.text(x,text_y,f"{char}",ha='center', va='center')
 
 
-def draw_vlines(random_stack_lines,color,ax,write="default",chars=""):
+def draw_vlines(random_stack_lines,color,ax,write="default",chars="",inverse=False):
     # draw vertical lines
-    [draw_vline(line,x,color,ax,write,chars[x]) for x,line in enumerate(random_stack_lines)]
+    [draw_vline(line,x,color,ax,write,chars[x],inverse) for x,line in enumerate(random_stack_lines)]
 
 def convert_vowel(char,ret = 1):
     # takes a character and return ret if it is a vowel
@@ -82,7 +90,7 @@ def random_hitomezashi(x,y,colorx="k",colory="k",save=True,file_name="hitomezash
         plt.savefig(file_name,dpi=dpi)
     plt.show()
 
-def sentence_hitomezashi(sentence1,sentence2,rule,colorx="k",colory="k",save=True,file_name="hitomezashi-stitch.png",dpi=120):
+def sentence_hitomezashi(sentence1,sentence2,rule,colorx="k",colory="k",save=True,file_name="hitomezashi-stitch-text.png",dpi=120):
     fig,ax = plt.subplots()
     x,y = len(sentence1), len(sentence2)
     ax.set_aspect(y/x)
@@ -91,8 +99,8 @@ def sentence_hitomezashi(sentence1,sentence2,rule,colorx="k",colory="k",save=Tru
         hstacklines = [create_lines(convert_vowel(char),y-1) for char in sentence1]
         vstacklines = [create_lines(convert_vowel(char),x-1) for char in sentence2]
 
-    draw_hlines(hstacklines,colorx,ax,write="chars",chars=sentence1)
-    draw_vlines(vstacklines,colory,ax,write="chars",chars=sentence2)
+    draw_hlines(hstacklines,colorx,ax,write="chars",chars=sentence1,inverse=True)
+    draw_vlines(vstacklines,colory,ax,write="chars",chars=sentence2,inverse=True)
 
     plt.axis("off")
     if save:
